@@ -1,0 +1,73 @@
+name: Test Matrix
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18, 20, 21]
+        package: [A, B]
+        manager: [yarn, npm]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Copy package.json
+        run: cp package-${{ matrix.package }}.json package.json
+
+      - name: Install dependencies
+        run: ${{ matrix.manager }} install
+
+      - name: Experiment
+        id: experiment
+        run: |
+          TEST_RESULT=$(${{ matrix.manager }} run --silent test)
+          echo "TEST_RESULT=$TEST_RESULT" >> $GITHUB_ENV
+
+      ## Write for matrix outputs workaround
+      - uses: cloudposse/github-action-matrix-outputs-write@main
+        id: out
+        with:
+          matrix-step-name: ${{ github.job }}
+          matrix-key: node@${{ matrix.node-version }} [${{ matrix.manager }}] (${{ matrix.package }})
+          outputs: |-
+              test-result: ${{ env.TEST_RESULT }}
+
+  read:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: cloudposse/github-action-matrix-outputs-read@main
+        id: read
+        with:
+          matrix-step-name: test
+
+      # - uses: actions/github-script@v6
+      #   with:
+      #     result-encoding: string
+      #     retries: 3
+      #     script: |
+      #       const result = ${{steps.read.outputs}};
+      #       console.log(result);
+      #       cosnt printResult = [];
+      #       console.log({result, json: JSON.stringify(result)});
+      #       const printResult = Object.keys(result).reduce(function (acc, key) {
+      #         acc[key] = result[key].indexOf('evil') > -1 ? '👹' : '👼';
+      #         return acc;
+      #       }, {});
+      #       console.table(printResult);
+
+      - name: print
+        run: node ./print-results.js ${{ toJSON(steps.read.outputs.result) }}
