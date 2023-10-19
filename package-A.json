@@ -1,0 +1,16 @@
+{
+  "name": "talk--npx-for-good",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "dummy"
+  },
+  "dependencies": {
+    "@vvscode/evil-dummy-cli": "^2.0.0",
+    "@vvscode/dummy-cli": "^1.0.0"
+  },
+  "keywords": [],
+  "author": "Vasil Vanchuk <v.vanchuk@tut.by>",
+  "license": "ISC"
+}
