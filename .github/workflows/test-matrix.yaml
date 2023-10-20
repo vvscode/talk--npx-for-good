@@ -10,7 +10,7 @@ jobs:
       matrix:
         node-version: [18, 20, 21]
         package: [A, B]
-        manager: [yarn, npm]
+        manager: [yarn, npm, pnpm]
 
     steps:
       - name: Checkout code
