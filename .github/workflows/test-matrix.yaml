@@ -21,6 +21,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Copy package.json
         run: cp package-${{ matrix.package }}.json package.json
 
