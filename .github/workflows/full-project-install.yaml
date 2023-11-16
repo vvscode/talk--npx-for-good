@@ -1,4 +1,4 @@
-name: Test Matrix
+name: Full project install
 
 on: push
 
@@ -44,7 +44,7 @@ jobs:
           matrix-step-name: ${{ github.job }}
           matrix-key: node@${{ matrix.node-version }} [${{ matrix.manager }}] (${{ matrix.package }})
           outputs: |-
-              test-result: ${{ env.TEST_RESULT }}
+            test-result: ${{ env.TEST_RESULT }}
 
   read:
     runs-on: ubuntu-latest
@@ -74,4 +74,4 @@ jobs:
       #       console.table(printResult);
 
       - name: print
-        run: node ./print-results.js ${{ toJSON(steps.read.outputs.result) }}
+        run: node ./print-full-project-install-results.js ${{ toJSON(steps.read.outputs.result) }}
