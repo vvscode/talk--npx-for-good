@@ -1,4 +1,4 @@
-name: Add awesome dependency
+name: Add awesome package@1.0.0
 
 on: push
 
@@ -34,15 +34,15 @@ jobs:
       - name: First part of experiment
         id: experiment1
         run: |
-          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" }'  >> result.txt
+          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }'  >> result.txt
 
       - name: Install dependencies
-        run: ${{ matrix.manager }} add @vvscode/awesome-package
+        run: ${{ matrix.manager }} add @vvscode/awesome-package@1.0.0
 
       - name: First part of experiment
         id: experiment2
         run: |
-          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" }' >> result.txt
+          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }' >> result.txt
 
       - name: Reinstall dependencies
         run: |
@@ -52,7 +52,7 @@ jobs:
       - name: Third part of experiment
         id: experiment3
         run: |
-          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" }' >> result.txt
+          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }' >> result.txt
 
       - name: Experiment
         id: experiment

@@ -1,4 +1,4 @@
-name: Add random dependency
+name: Add awesome package@1.1.0
 
 on: push
 
@@ -37,7 +37,7 @@ jobs:
           ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }'  >> result.txt
 
       - name: Install dependencies
-        run: ${{ matrix.manager }} add @vvscode/random-package
+        run: ${{ matrix.manager }} add @vvscode/awesome-package@1.1.0
 
       - name: First part of experiment
         id: experiment2
