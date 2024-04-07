@@ -10,20 +10,17 @@ jobs:
       matrix:
         node-version: [18, 20, 21]
         package: [A]
-        manager: [yarn, npm, pnpm]
+        manager: [yarn, npm, pnpm, bun]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-
       - uses: pnpm/action-setup@v2
         with:
           version: 8
+      - uses: oven-sh/setup-bun@v1
 
       - name: Copy package.json
         run: cp package-add-random-dependency.json package.json
