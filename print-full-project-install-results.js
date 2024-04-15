@@ -18,8 +18,8 @@ Object.keys(testResults).forEach(function (key) {
   printResults.push({
     node: key.match(/node@(\d+)/)[1],
     manager: key.match(/\[(.+)\]/)[1],
-    package: key.includes("(A)") ? "A: 👹👼" : "B: 👼👹",
-    result: testResults[key].indexOf("evil") > -1 ? "👹" : "👼",
+    package: key.includes("(A)") ? "A: 😈👹👼"  : key.includes("(B)") ? "B: 👼😈👹": "C: 👹👼😈",
+    result: testResults[key].indexOf("evil-dummy-cli") > -1 ? "👹" : testResults[key].indexOf("awful-dummy-cli") > -1 ? '😈': "👼",
   });
 });
 
@@ -31,9 +31,13 @@ printResults
 
 const aPrintResults = printResults.filter((el) => el.package.includes("A:"));
 const bPrintResults = printResults.filter((el) => el.package.includes("B:"));
+const cPrintResults = printResults.filter((el) => el.package.includes("C:"));
 
 console.log("package-A.json");
 console.table(aPrintResults);
 
 console.log("package-B.json");
 console.table(bPrintResults);
+
+console.log("package-C.json");
+console.table(cPrintResults);

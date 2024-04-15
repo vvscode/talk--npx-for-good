@@ -9,6 +9,7 @@
   "keywords": [],
   "dependencies": {
     "@vvscode/dummy-cli": "^1.0.0",
+    "@vvscode/awful-dummy-cli": "^1.0.1",
     "@vvscode/evil-dummy-cli": "^2.0.0"
   },
   "author": "Vasil Vanchuk <v.vanchuk@tut.by>",

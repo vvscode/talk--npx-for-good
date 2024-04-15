@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20]
-        package: [A, B]
+        package: [A, B, C]
         manager: [yarn, npm, pnpm, bun]
 
     steps:
