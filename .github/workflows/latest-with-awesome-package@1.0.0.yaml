@@ -21,7 +21,7 @@ jobs:
         with:
           version: 8
       - uses: oven-sh/setup-bun@v1
-      
+
       - name: Log versions
         run: |
           echo "Node version: $(node --version)"
@@ -102,4 +102,9 @@ jobs:
       #       console.table(printfResult);
 
       - name: printf
-        run: node ./print-add-dependency-results.js ${{ toJSON(steps.read.outputs.result) }}
+        run: |
+          echo "Node version: $(node --version)"
+          echo "Yarn version: $(yarn --version)"
+          echo "PNPM version: $(pnpm --version)"
+          echo "Bun version: $(bun --version)"
+          node ./print-add-dependency-results.js ${{ toJSON(steps.read.outputs.result) }}
