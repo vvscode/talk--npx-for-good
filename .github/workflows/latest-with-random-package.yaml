@@ -1,4 +1,4 @@
-name: Full project install
+name: Latest Add random dependency
 
 on: push
 
@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20]
-        package: [A, B, C]
+        package: [A]
         manager: [yarn, npm, pnpm, bun]
 
     steps:
@@ -23,15 +23,39 @@ jobs:
       - uses: oven-sh/setup-bun@v1
 
       - name: Copy package.json
-        run: cp package-${{ matrix.package }}.json package.json
+        run: cp package-add-random-dependency.json package.json
 
       - name: Install dependencies
         run: ${{ matrix.manager }} install
 
+      - name: First part of experiment
+        id: experiment1
+        run: |
+          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }'  >> result.txt
+
+      - name: Install dependencies
+        run: ${{ matrix.manager }} add @vvscode/random-package
+
+      - name: First part of experiment
+        id: experiment2
+        run: |
+          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }' >> result.txt
+
+      - name: Reinstall dependencies
+        run: |
+          rm -rf node_modules
+          ${{ matrix.manager }} install
+
+      - name: Third part of experiment
+        id: experiment3
+        run: |
+          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }' >> result.txt
+
       - name: Experiment
         id: experiment
         run: |
-          TEST_RESULT=$(${{ matrix.manager }} run --silent test)
+          cat result.txt
+          TEST_RESULT="$(cat result.txt)"
           echo "TEST_RESULT=$TEST_RESULT" >> $GITHUB_ENV
 
       ## Write for matrix outputs workaround
@@ -62,13 +86,13 @@ jobs:
       #     script: |
       #       const result = ${{steps.read.outputs}};
       #       console.log(result);
-      #       cosnt printResult = [];
+      #       cosnt printfResult = [];
       #       console.log({result, json: JSON.stringify(result)});
-      #       const printResult = Object.keys(result).reduce(function (acc, key) {
+      #       const printfResult = Object.keys(result).reduce(function (acc, key) {
       #         acc[key] = result[key].indexOf('evil') > -1 ? '👹' : '👼';
       #         return acc;
       #       }, {});
-      #       console.table(printResult);
+      #       console.table(printfResult);
 
-      - name: print
-        run: node ./print-full-project-install-results.js ${{ toJSON(steps.read.outputs.result) }}
+      - name: printf
+        run: node ./print-add-dependency-results.js ${{ toJSON(steps.read.outputs.result) }}

@@ -1,4 +1,4 @@
-name: Add evil dependency
+name: Latest Add awesome package@1.0.0
 
 on: push
 
@@ -23,7 +23,7 @@ jobs:
       - uses: oven-sh/setup-bun@v1
 
       - name: Copy package.json
-        run: cp package-add-evil-dependency.json package.json
+        run: cp package-add-random-dependency.json package.json
 
       - name: Install dependencies
         run: ${{ matrix.manager }} install
@@ -34,7 +34,7 @@ jobs:
           ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }'  >> result.txt
 
       - name: Install dependencies
-        run: ${{ matrix.manager }} add @vvscode/evil-dummy-cli
+        run: ${{ matrix.manager }} add @vvscode/awesome-package@1.0.0
 
       - name: First part of experiment
         id: experiment2
