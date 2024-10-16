@@ -24,6 +24,13 @@ jobs:
         with:
           bun-version: 1.0.10
 
+      - name: Log versions
+        run: |
+          echo "Node version: $(node --version)"
+          echo "Yarn version: $(yarn --version)"
+          echo "PNPM version: $(pnpm --version)"
+          echo "Bun version: $(bun --version)"
+
       - name: Copy package.json
         run: cp package-add-normal-dependency.json package.json
 

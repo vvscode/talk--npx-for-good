@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20.10]
-        package: [A]
+        package: [A, B, C]
         manager: [yarn, npm, pnpm, bun]
 
     steps:
@@ -24,6 +24,13 @@ jobs:
         with:
           bun-version: 1.0.10
 
+      - name: Log versions
+        run: |
+          echo "Node version: $(node --version)"
+          echo "Yarn version: $(yarn --version)"
+          echo "PNPM version: $(pnpm --version)"
+          echo "Bun version: $(bun --version)"
+          
       - name: Copy package.json
         run: cp package-${{ matrix.package }}.json package.json
 
