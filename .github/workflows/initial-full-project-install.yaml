@@ -43,11 +43,7 @@ jobs:
         run: |
           TEST_RESULT=$(${{ matrix.manager }} run --silent test)
           echo "TEST_RESULT=$TEST_RESULT" >> $GITHUB_ENV
-          VERSIONS_DUMP="Node version: $(node --version)
-          Yarn version: $(yarn --version)
-          PNPM version: $(pnpm --version)
-          Bun version: $(bun --version)"
-          echo "VERSIONS_DUMP=$VERSIONS_DUMP" >> $GITHUB_ENV
+          
 
       ## Write for matrix outputs workaround
       - uses: cloudposse/github-action-matrix-outputs-write@main
@@ -57,7 +53,7 @@ jobs:
           matrix-key: node@${{ matrix.node-version }} [${{ matrix.manager }}] (${{ matrix.package }})
           outputs: |-
             test-result: ${{ env.TEST_RESULT }}
-            test-versions: ${{ env.VERSIONS_DUMP }}
+            
 
   read:
     runs-on: ubuntu-latest
