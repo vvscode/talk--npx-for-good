@@ -26,7 +26,7 @@ jobs:
 
       - name: Log versions
         run: |
-          yarn set version 1.22.20
+          yarn set version 1.22.19
           echo "Node version: $(node --version)"
           echo "Yarn version: $(yarn --version)"
           echo "PNPM version: $(pnpm --version)"
@@ -67,6 +67,11 @@ jobs:
           cat result.txt
           TEST_RESULT="$(cat result.txt)"
           echo "TEST_RESULT=$TEST_RESULT" >> $GITHUB_ENV
+          VERSIONS_DUMP="Node version: $(node --version)
+          Yarn version: $(yarn --version)
+          PNPM version: $(pnpm --version)
+          Bun version: $(bun --version)"
+          echo "VERSIONS_DUMP=$VERSIONS_DUMP" >> $GITHUB_ENV
 
       ## Write for matrix outputs workaround
       - uses: cloudposse/github-action-matrix-outputs-write@main
@@ -76,6 +81,7 @@ jobs:
           matrix-key: node@${{ matrix.node-version }} [${{ matrix.manager }}] (${{ matrix.package }})
           outputs: |-
             test-result: ${{ env.TEST_RESULT }}
+            test-versions: ${{ env.VERSIONS_DUMP }}
 
   read:
     runs-on: ubuntu-latest
@@ -106,8 +112,5 @@ jobs:
 
       - name: printf
         run: |
-          echo "Node version: $(node --version)"
-          echo "Yarn version: $(yarn --version)"
-          echo "PNPM version: $(pnpm --version)"
-          echo "Bun version: $(bun --version)"
           node ./print-add-dependency-results.js ${{ toJSON(steps.read.outputs.result) }}
+          echo "${{ toJSON(steps.read.outputs.result) }}"
