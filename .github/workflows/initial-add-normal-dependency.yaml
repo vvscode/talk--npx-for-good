@@ -22,7 +22,7 @@ jobs:
           version: 8.10.0
       - uses: oven-sh/setup-bun@v1
         with:
-          bun-version: 1.0.10
+          bun-version: 1.0.1
 
       - name: Log versions
         run: |
