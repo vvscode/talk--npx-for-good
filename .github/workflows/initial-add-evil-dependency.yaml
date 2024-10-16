@@ -1,0 +1,100 @@
+name: Initial Add normal dependency
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.10]
+        package: [A]
+        manager: [yarn, npm, pnpm, bun]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.10.0
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: 1.0.10
+
+      - name: Copy package.json
+        run: cp package-add-normal-dependency.json package.json
+
+      - name: Install dependencies
+        run: ${{ matrix.manager }} install
+
+      - name: First part of experiment
+        id: experiment1
+        run: |
+          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }'  >> result.txt
+
+      - name: Install dependencies
+        run: ${{ matrix.manager }} add @vvscode/dummy-cli
+
+      - name: First part of experiment
+        id: experiment2
+        run: |
+          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }' >> result.txt
+
+      - name: Reinstall dependencies
+        run: |
+          rm -rf node_modules
+          ${{ matrix.manager }} install
+
+      - name: Third part of experiment
+        id: experiment3
+        run: |
+          ${{ matrix.manager }} run --silent test | awk '/@vvscode\/evil-dummy-cli/ { printf "👹" } /@vvscode\/dummy-cli/ { printf "👼" } /@vvscode\/awful-dummy-cli/ { printf "😈" }' >> result.txt
+
+      - name: Experiment
+        id: experiment
+        run: |
+          cat result.txt
+          TEST_RESULT="$(cat result.txt)"
+          echo "TEST_RESULT=$TEST_RESULT" >> $GITHUB_ENV
+
+      ## Write for matrix outputs workaround
+      - uses: cloudposse/github-action-matrix-outputs-write@main
+        id: out
+        with:
+          matrix-step-name: ${{ github.job }}
+          matrix-key: node@${{ matrix.node-version }} [${{ matrix.manager }}] (${{ matrix.package }})
+          outputs: |-
+            test-result: ${{ env.TEST_RESULT }}
+
+  read:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: cloudposse/github-action-matrix-outputs-read@main
+        id: read
+        with:
+          matrix-step-name: test
+
+      # - uses: actions/github-script@v6
+      #   with:
+      #     result-encoding: string
+      #     retries: 3
+      #     script: |
+      #       const result = ${{steps.read.outputs}};
+      #       console.log(result);
+      #       cosnt printfResult = [];
+      #       console.log({result, json: JSON.stringify(result)});
+      #       const printfResult = Object.keys(result).reduce(function (acc, key) {
+      #         acc[key] = result[key].indexOf('evil') > -1 ? '👹' : '👼';
+      #         return acc;
+      #       }, {});
+      #       console.table(printfResult);
+
+      - name: printf
+        run: node ./print-add-dependency-results.js ${{ toJSON(steps.read.outputs.result) }}
