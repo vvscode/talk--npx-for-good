@@ -26,11 +26,12 @@ jobs:
 
       - name: Log versions
         run: |
+          yarn set version 1.22.20
           echo "Node version: $(node --version)"
           echo "Yarn version: $(yarn --version)"
           echo "PNPM version: $(pnpm --version)"
           echo "Bun version: $(bun --version)"
-          
+
       - name: Copy package.json
         run: cp package-${{ matrix.package }}.json package.json
 

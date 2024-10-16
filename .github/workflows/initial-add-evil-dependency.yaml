@@ -26,6 +26,7 @@ jobs:
 
       - name: Log versions
         run: |
+          yarn set version 1.22.20
           echo "Node version: $(node --version)"
           echo "Yarn version: $(yarn --version)"
           echo "PNPM version: $(pnpm --version)"
