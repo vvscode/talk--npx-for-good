@@ -25,6 +25,7 @@ jobs:
       - name: Log versions
         run: |
           echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
           echo "Yarn version: $(yarn --version)"
           echo "PNPM version: $(pnpm --version)"
           echo "Bun version: $(bun --version)"

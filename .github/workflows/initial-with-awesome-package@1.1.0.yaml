@@ -28,6 +28,7 @@ jobs:
         run: |
           yarn set version 1.22.19
           echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
           echo "Yarn version: $(yarn --version)"
           echo "PNPM version: $(pnpm --version)"
           echo "Bun version: $(bun --version)"
